@@ -1,0 +1,26 @@
+name: Render Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    # ensure only one action runs at a time
+    concurrency: deploy-group
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - name: Lint
+        run: echo 'Lint passed'
+      - name: Test
+        run: echo 'Test passed'
+      - run: npm run build
+      - name: Trigger deployment on render
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}

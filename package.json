@@ -1,0 +1,47 @@
+{
+  "name": "note",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node backend/index.js",
+    "dev:node": "cross-env NODE_ENV=development nodemon backend/index.js",
+    "dev:ui": "vite frontend",
+    "dev": "npm run dev:node",
+    "build:ui": "vite build frontend --outDir ../dist --emptyOutDir",
+    "build": "npm run build:ui",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "test": "cross-env NODE_ENV=test node --test",
+    "logs:prod": "fly logs",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.1",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "nodemon": "^3.1.3",
+    "supertest": "^7.0.0",
+    "vite": "^5.2.0"
+  }
+}
