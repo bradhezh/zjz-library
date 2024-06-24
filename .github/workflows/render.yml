@@ -20,6 +20,8 @@ jobs:
       - name: Lint
         run: npm run lint
       - name: Test
+        env:
+          TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
         run: npm test
       - run: npm run build
       - name: Trigger deployment on Render
