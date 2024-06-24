@@ -1,4 +1,4 @@
-name: Render Deployment
+name: React Express pipeline
 
 on:
   push:
@@ -9,11 +9,9 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  deploy:
-    name: Deploy
+  full:
+    name: Full pipeline on Render
     runs-on: ubuntu-20.04
-    # ensure only one action runs at a time
-    concurrency: deploy-group
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
