@@ -18,9 +18,9 @@ jobs:
           node-version: '20'
       - run: npm install
       - name: Lint
-        run: echo 'Lint passed'
+        run: npm run lint
       - name: Test
-        run: echo 'Test passed'
+        run: npm test
       - run: npm run build
-      - name: Trigger deployment on render
+      - name: Trigger deployment on Render
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}

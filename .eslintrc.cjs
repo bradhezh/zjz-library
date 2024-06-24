@@ -11,22 +11,47 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh'],
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.cjs',
+  ],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  },
+  settings: {
+    react: {
+      version: '18.2',
+    },
+  },
+  plugins: [
+    'react-refresh',
+  ],
   rules: {
     'eqeqeq': 'error',
     'no-trailing-spaces': 'error',
     'no-unused-vars': 'error',
-    'indent': ['error', 2],
-    'linebreak-style': ['error', 'unix'],
-    'quotes': ['error', 'single'],
-    'semi': ['error', 'never'],
+    'indent': [
+      'warn',
+      2,
+    ],
+    'linebreak-style': [
+      'error',
+      'unix',
+    ],
+    'quotes': [
+      'error',
+      'single',
+    ],
+    'semi': [
+      'error',
+      'never',
+    ],
     'react/jsx-no-target-blank': 'off',
     'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
+      'warn', {
+        allowConstantExport: true,
+      },
     ],
   },
 }

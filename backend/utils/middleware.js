@@ -48,7 +48,7 @@ const handlerErr = (err, req, res, next) => {
     err.message.includes('Cannot read properties of null (reading \'id\')')
   ) {
     return res.status(400).json({
-      error: 'A valid user id is neeed to create a note',
+      error: 'a valid user id is neeed for permission',
     })
   }
   if (err.name === 'JsonWebTokenError') {

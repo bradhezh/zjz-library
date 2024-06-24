@@ -2,13 +2,12 @@ const mongoose = require('mongoose')
 
 // the collection is given a schema (used to validating) at the application
 // level by mongoose, although it's schemaless by default in Mongo
-const schemaNote = new mongoose.Schema({
-  content: {
+const schemaItem = new mongoose.Schema({
+  name: {
     type: String,
-    minLength: 5,
+    minLength: 6,
     required: true,
   },
-  important: Boolean,
   // mongoose uses this field to populate
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +15,7 @@ const schemaNote = new mongoose.Schema({
   },
 })
 // how objects are transformed to JSON
-schemaNote.set('toJSON', {
+schemaItem.set('toJSON', {
   transform: (document, returned) => {
     returned.id = returned._id.toString()
     delete returned._id
@@ -24,5 +23,5 @@ schemaNote.set('toJSON', {
   },
 })
 
-// corresponding to the notes collection in the database
-module.exports = mongoose.model('Note', schemaNote)
+// corresponding to the items collection in the database
+module.exports = mongoose.model('Item', schemaItem)

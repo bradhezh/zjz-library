@@ -11,10 +11,14 @@ const schemaUser = new mongoose.Schema({
     unique: true,
   },
   name: String,
-  passwd: String,
-  notes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Note',
+  password: {
+    type: String,
+    minLength: 6,
+    required: true,
+  },
+  roles: [{
+    type: String,
+    required: true,
   }],
 })
 schemaUser.set('toJSON', {
@@ -22,7 +26,7 @@ schemaUser.set('toJSON', {
     returned.id = returned._id.toString()
     delete returned._id
     delete returned.__v
-    delete returned.passwd
+    delete returned.password
   },
 })
 

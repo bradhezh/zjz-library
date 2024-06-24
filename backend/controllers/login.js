@@ -6,34 +6,32 @@ const config = require('../utils/config')
 const User = require('../models/user')
 
 routerLogin.post('/', async (req, res) => {
-  const userToVerify = req.body
+  const userinfo = req.body
 
   const user = await User.findOne({
-    username: userToVerify.username,
+    username: userinfo.username,
   })
   const verified =
-    user && await bcrypt.compare(userToVerify.passwd, user.passwd)
+    user && await bcrypt.compare(userinfo.password, user.password)
   if (!verified) {
     // 401: Unauthorized
     return res.status(401).json({
-      error: 'invalid username or password',
+      error: 'username or password invalid',
     })
   }
 
   // a token digitally signed with the secret, only parties have the secret can
   // generate a valid token
   const token = jwt.sign({
-    username: user.username,
-    id: user._id,
+    id: user.id,
   }, config.SECRET, {
     // expiring in 1 hour
     expiresIn: 60 * 60,
   })
 
   res.status(200).json({
+    ...user.toJSON(),
     token,
-    username: user.username,
-    name: user.name,
   })
 })
 

@@ -1,0 +1,64 @@
+const jwt = require('jsonwebtoken')
+
+const config = require('../utils/config')
+const User = require('../models/user')
+
+const auth = (roles, model) => {
+  return async (req, res, next) => {
+    const decoded = jwt.verify(getTokenFrom(req), config.SECRET)
+    const user = await User.findById(decoded.id)
+    if (!user) {
+      return res.status(401).json({
+        error: 'user invalid',
+      })
+    }
+
+    req.user = user
+    if (!roles?.length) {
+      next()
+      return
+    }
+
+    if (roles.includes('owner')) {
+      const resource = await model.findById(req.params.id)
+      if (!resource) {
+        return res.status(404).end()
+      }
+      if (
+        user.id !== (model === User ? resource.id : resource.user) &&
+        !user.roles.includes('admins')
+      ) {
+        return res.status(401).json({
+          error: 'permission invalid',
+        })
+      }
+      res.locals.resource = resource
+      next()
+      return
+    }
+
+    if (
+      !user.roles.includes('admins') &&
+      !user.roles.some(e => roles.includes(e))
+    ) {
+      return res.status(401).json({
+        error: 'permission invalid',
+      })
+    }
+
+    next()
+  }
+}
+
+const getTokenFrom = req => {
+  // token is included in the request as the authorization header with the
+  // scheme: Bearer xxxtokenxxx
+  const auth = req.get('authorization')
+  if (auth && auth.startsWith('Bearer ')) {
+    return auth.replace('Bearer ', '')
+  }
+}
+
+module.exports = {
+  auth,
+}

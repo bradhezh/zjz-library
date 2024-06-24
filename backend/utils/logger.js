@@ -1,5 +1,7 @@
+const config = require('./config')
+
 const info = (...params) => {
-  if (process.env.NODE_ENV === 'test') {
+  if (config.NODE_ENV === 'test') {
     return
   }
 
@@ -7,7 +9,7 @@ const info = (...params) => {
 }
 
 const error = (...params) => {
-  if (process.env.NODE_ENV === 'test') {
+  if (config.NODE_ENV === 'test') {
     return
   }
 

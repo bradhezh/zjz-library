@@ -22,12 +22,15 @@ const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const routerUsers = require('./controllers/users')
 const routerLogin = require('./controllers/login')
-const routerNotes = require('./controllers/notes')
+const routerItems = require('./controllers/items')
 
 const app = express()
 
 mongoose.set('strictQuery', false)
-logger.info('connecting to', config.MONGO_URL)
+logger.info(
+  'connecting to',
+  config.NODE_ENV === 'production' ? 'database' : config.MONGO_URL
+)
 
 // an async function works only if it's waited for; "await" can be used in the
 // top level of ES6 modules because the module importing waits for the module
@@ -45,6 +48,7 @@ logger.info('connecting to', config.MONGO_URL)
 mongoose.connect(config.MONGO_URL)
   .then(() => {
     logger.info('connected')
+
   }).catch(err => {
     logger.error('error connecting to MongoDB:', err.message)
   })
@@ -64,17 +68,17 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
 })
 
-// for deployment
+// for checking deployment
 app.get('/version', (req, res) => {
   // change this to ensure a new version is deployed
-  res.send('2')
+  res.send('0')
 })
 
 // only the remaining part of the path after this matching will be matched for
 // middlewares of the router
 app.use('/api/users', routerUsers)
 app.use('/api/login', routerLogin)
-app.use('/api/notes', routerNotes)
+app.use('/api/items', routerItems)
 
 app.use(middleware.endpointUnknown)
 app.use(middleware.handlerErr)

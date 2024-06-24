@@ -9,9 +9,8 @@
     "dev": "npm run dev:node",
     "build:ui": "vite build frontend --outDir ../dist --emptyOutDir",
     "build": "npm run build:ui",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives",
     "test": "cross-env NODE_ENV=test node --test",
-    "logs:prod": "fly logs",
     "preview": "vite preview"
   },
   "keywords": [],

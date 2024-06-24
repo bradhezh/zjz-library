@@ -1,12 +1,12 @@
-h1 {
+.header {
   color: green;
   font-style: italic;
 }
 
-.note {
-  color: grey;
-  padding-top: 3px;
-  font-size: 15px;
+.footer {
+  color: blue;
+  font-style: italic;
+  font-size: 10,
 }
 
 .info {
@@ -27,4 +27,10 @@ h1 {
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+.item {
+  color: grey;
+  padding-top: 3px;
+  font-size: 15px;
 }

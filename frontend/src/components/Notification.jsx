@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 
+import './style.css'
+
 const Notification = ({notif}) => {
   if (!notif) {
     return
@@ -19,6 +21,5 @@ Notification.propTypes = {
     message: PropTypes.string.isRequired,
   }),
 }
-
 
 export default Notification
