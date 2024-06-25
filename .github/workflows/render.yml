@@ -18,13 +18,12 @@ jobs:
         with:
           node-version: '20'
       - run: npm install
-      - name: Lint
-        run: npm run lint
+      - run: npm run lint
+      - run: npm run build
       - name: Test
         env:
           TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
         run: npm test
-      - run: npm run build
       - name: Trigger deployment on Render
         if: ${{ github.event_name == 'push' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}

@@ -5,7 +5,7 @@ const NODE_ENV = process.env.NODE_ENV
 
 // configured by dotenv (locally) or in hosts such as Render (automatically) or
 // Fly.io (fly.toml)
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 
 // configured by dotenv (locally) or in hosts such as Render (.env manually
 // added as a secret file) or Fly.io (fly secrets set ...)

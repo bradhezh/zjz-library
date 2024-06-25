@@ -71,7 +71,7 @@ app.get('/', (req, res) => {
 // for checking deployment
 app.get('/version', (req, res) => {
   // change this to ensure a new version is deployed
-  res.send('1')
+  res.send('0')
 })
 
 // only the remaining part of the path after this matching will be matched for
