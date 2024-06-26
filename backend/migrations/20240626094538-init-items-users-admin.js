@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const config = require('../utils/config')
 
 module.exports = {
-  async up(db, client) {
+  async up(db) {
     // TODO write your migration here.
     // See
     // https://github.com/seppevs/migrate-mongo/#creating-a-new-migration-script
@@ -28,7 +28,7 @@ module.exports = {
     await db.createCollection('items')
   },
 
-  async down(db, client) {
+  async down(db) {
     // TODO write the statements to rollback your migration (if possible)
     // Example:
     //await db.collection('albums').updateOne({
