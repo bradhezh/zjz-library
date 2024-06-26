@@ -1,10 +1,9 @@
 const routerUsers = require('express').Router()
 const bcrypt = require('bcrypt')
 
+const config = require('../utils/config')
 const {auth} = require('../utils/auth')
 const User = require('../models/user')
-
-const saltround = 10
 
 routerUsers.get('/', auth([
   'admins',
@@ -69,7 +68,7 @@ routerUsers.put('/:id', auth([
   const user = res.locals.resource
 
   delete userinfo.roles
-  userinfo.password = await bcrypt.hash(userinfo.password, saltround)
+  userinfo.password = await bcrypt.hash(userinfo.password, config.SALT)
   Object.assign(user, userinfo)
   const updated = await user.save()
 
@@ -85,7 +84,7 @@ routerUsers.put('/:id/admin', auth([
     return res.status(404).end()
   }
 
-  userinfo.password = await bcrypt.hash(userinfo.password, saltround)
+  userinfo.password = await bcrypt.hash(userinfo.password, config.SALT)
   Object.assign(user, userinfo)
   const updated = await user.save()
 
@@ -95,7 +94,7 @@ routerUsers.put('/:id/admin', auth([
 const signin = async (req, res, roles) => {
   const userinfo = req.body
 
-  userinfo.password = await bcrypt.hash(userinfo.password, saltround)
+  userinfo.password = await bcrypt.hash(userinfo.password, config.SALT)
   userinfo.roles = roles
   const created = await (new User(userinfo)).save()
 

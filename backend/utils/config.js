@@ -20,9 +20,22 @@ const MONGO_URL =
 // the secret for user tokens
 const SECRET = process.env.SECRET
 
+const SALT = 10
+
+const ADMIN_INITIAL_USERNAME = 'admin'
+const ADMIN_INITIAL_PASSWORD = '88888888'
+
+const ADMIN_ROLE = 'admin'
+const USER_ROLE = 'user'
+
 module.exports = {
   NODE_ENV,
   PORT,
   MONGO_URL,
   SECRET,
+  SALT,
+  ADMIN_INITIAL_USERNAME,
+  ADMIN_INITIAL_PASSWORD,
+  ADMIN_ROLE,
+  USER_ROLE,
 }
