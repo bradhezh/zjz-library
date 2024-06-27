@@ -25,7 +25,7 @@ const MONGO_URL =
 // the secret for user tokens
 const SECRET = process.env.SECRET
 // saltround for hash password
-const SALT = process.env.SALT
+const SALT = Number(process.env.SALT)
 
 const ADMIN_INITIAL_USERNAME = process.env.ADMIN_INITIAL_USERNAME
 const ADMIN_INITIAL_PASSWORD = process.env.ADMIN_INITIAL_PASSWORD
