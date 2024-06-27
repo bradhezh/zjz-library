@@ -1,15 +1,10 @@
 import PropTypes from 'prop-types'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 
 import './style.css'
 
 const UserBar = ({user}) => {
   const navigate = useNavigate()
-
-  const login = evt => {
-    evt.preventDefault()
-    navigate('/login')
-  }
 
   const logout = evt => {
     evt.preventDefault()
@@ -18,14 +13,15 @@ const UserBar = ({user}) => {
   }
 
   return (
-    <table style={{width: '100%'}}>
+    <table>
       <thead>
         <tr>
           <td>{user && <h2>Welcome, {user.name || user.username}</h2>}</td>
-          <td style={{textAlign: 'right'}}>{
-            user ?
-              <a href="/" onClick={logout}>Logout</a> :
-              <a href="/" onClick={login}>Login</a>
+          <td>{user && <Link to="/password">Change password</Link>}</td>
+          <td>{
+            !user ?
+              <Link to="/login">Login</Link> :
+              <a href="/" onClick={logout}>Logout</a>
           }</td>
         </tr>
       </thead>

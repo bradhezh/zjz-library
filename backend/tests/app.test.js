@@ -4,6 +4,7 @@ const supertest = require('supertest')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
+const config = require('../config')
 const Item = require('../models/item')
 const User = require('../models/user')
 const app = require('../app')
@@ -12,7 +13,9 @@ const user = {
   username: 'bradhezh',
   name: 'Brad Hezh',
   password: '123456',
-  roles: ['users'],
+  roles: [
+    config.USER_ROLE,
+  ],
 }
 
 const items = [{
@@ -29,7 +32,7 @@ describe('when there is an initially user in db', () => {
   // before tests in the group
   before(async () => {
     await User.deleteMany({})
-    const password = await bcrypt.hash(user.password, 10)
+    const password = await bcrypt.hash(user.password, config.SALT)
     await (new User({
       ...user,
       password,
@@ -63,9 +66,10 @@ describe('when there is an initially user in db', () => {
     // "node --test --test-only" (npm test -- --test-only) only executes
     // "test.only"
     //test.only('getting all items succeeds',
-    test('getting all items succeeds without the user field', async () => {
+    test('getting all items by "user" succeeds without the user field',
+    async () => {
       const res = await api
-        .get('/api/items')
+        .get(config.ITEMS_ROUTE)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 

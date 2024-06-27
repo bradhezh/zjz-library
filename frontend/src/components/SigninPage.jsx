@@ -5,7 +5,7 @@ import './style.css'
 import Header from './Header'
 import Footer from './Footer'
 import Notification from './Notification'
-import svcSignin from '../services/signin'
+import svcUsers from '../services/users'
 
 const SigninPage = () => {
   const [username, setUsername] = useState('')
@@ -18,7 +18,7 @@ const SigninPage = () => {
   const signin = async evt => {try {
     evt.preventDefault()
 
-    await svcSignin.signin({
+    await svcUsers.signin({
       username,
       name,
       password,
@@ -45,17 +45,21 @@ const SigninPage = () => {
           value={username}
           onChange={evt => setUsername(evt.target.value)}
         />
+        <br />
         <input
           placeholder="Name"
           value={name}
           onChange={evt => setName(evt.target.value)}
         />
+        <br />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={evt => setPassword(evt.target.value)}
         />
+        <br />
+        <br />
         <button type="submit">Sign in</button>
       </form>
       <Footer />

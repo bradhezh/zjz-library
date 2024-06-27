@@ -17,7 +17,7 @@ const mongoose = require('mongoose')
 require('express-async-errors')
 
 //const cors = require('cors')
-const config = require('./utils/config')
+const config = require('./config')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 const routerUsers = require('./controllers/users')
@@ -29,7 +29,7 @@ const app = express()
 mongoose.set('strictQuery', false)
 logger.info(
   'connecting to',
-  config.NODE_ENV === 'production' ? 'database' : config.MONGO_URL
+  config.NODE_ENV !== config.NODE_ENV_PRD ? config.MONGO_URL : 'database'
 )
 
 // an async function works only if it's waited for; "await" can be used in the
@@ -50,7 +50,7 @@ mongoose.connect(config.MONGO_URL)
     logger.info('connected')
 
   }).catch(err => {
-    logger.error('error connecting to MongoDB:', err.message)
+    logger.error('connecting to MongoDB failed:', err.message)
   })
 
 // to support CORS
@@ -76,9 +76,9 @@ app.get('/version', (req, res) => {
 
 // only the remaining part of the path after this matching will be matched for
 // middlewares of the router
-app.use('/api/users', routerUsers)
-app.use('/api/login', routerLogin)
-app.use('/api/items', routerItems)
+app.use(config.USERS_ROUTE, routerUsers)
+app.use(config.LOGIN_ROUTE, routerLogin)
+app.use(config.ITEMS_ROUTE, routerItems)
 
 app.use(middleware.endpointUnknown)
 app.use(middleware.handlerErr)

@@ -44,14 +44,18 @@ const LoginPage = () => {
           value={username}
           onChange={evt => setUsername(evt.target.value)}
         />
+        <br />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={evt => setPassword(evt.target.value)}
         />
+        <br />
+        <br />
         <button type="submit">Login</button>
       </form>
+      <br />
       <Link to="/signin">Sign in</Link>
       <Footer />
     </div>

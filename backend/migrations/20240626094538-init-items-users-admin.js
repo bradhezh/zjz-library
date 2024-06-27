@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 
-const config = require('../utils/config')
+const config = require('../config')
 
 module.exports = {
   async up(db) {
@@ -22,7 +22,9 @@ module.exports = {
     await db.collection('users').insertOne({
       username: config.ADMIN_INITIAL_USERNAME,
       password,
-      roles: [config.ADMIN_ROLE],
+      roles: [
+        config.ADMIN_ROLE,
+      ],
     })
 
     await db.createCollection('items')

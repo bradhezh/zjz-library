@@ -31,6 +31,12 @@
 
 .item {
   color: grey;
-  padding-top: 3px;
+  padding-top: 15px;
+  font-size: 15px;
+}
+
+.itemline {
+  color: grey;
+  margin-bottom: 5px;
   font-size: 15px;
 }

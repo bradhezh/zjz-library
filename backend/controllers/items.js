@@ -1,6 +1,7 @@
 // create a router
 const routerItems = require('express').Router()
 
+const config = require('../config')
 const {auth} = require('../utils/auth')
 const User = require('../models/user')
 const Item = require('../models/item')
@@ -19,7 +20,7 @@ routerItems.get('/', async (req, res) => {
   res.json(transformed)
 })
 
-routerItems.get('/available', async (req, res) => {
+routerItems.get(config.BY_AVAILABLE, async (req, res) => {
   const items = await Item.find({
     user: {
       $exists: false,
@@ -29,21 +30,7 @@ routerItems.get('/available', async (req, res) => {
   res.json(items)
 })
 
-routerItems.get('/admin', auth([
-  'admins',
-]), async (req, res) => {
-  // populate(...) replaces the "user" filed of the items with the users being
-  // referenced; the reference relationship is recorded in the "Item" schema, so
-  // mongoose know it's a user id and then can populate it
-  const items = await Item.find({}).populate('user', {
-    // fields of "user" selected
-    username: 1,
-  })
-
-  res.json(items)
-})
-
-routerItems.get('/user', auth(), async (req, res) => {
+routerItems.get(config.BY_USER, auth(), async (req, res) => {
   const user = req.user
 
   const items = await Item.find({
@@ -54,11 +41,26 @@ routerItems.get('/user', auth(), async (req, res) => {
   res.json(items)
 })
 
+routerItems.get(config.BY_ADMIN, auth([
+  config.ADMIN_ROLE,
+]), async (req, res) => {
+  // populate(...) replaces the "user" filed of the items with the users being
+  // referenced; the reference relationship is recorded in the "Item" schema, so
+  // mongoose know it's a user id and then can populate it
+  const items = await Item.find({}).populate('user', {
+    // fields of "user" selected
+    username: 1,
+    name: 1,
+  })
+
+  res.json(items)
+})
+
 // ":<param>" in the route defines a parameter to match a variable argument in
 // the request path; this parameter (with the value passed from the argument)
 // can be accessed via request.params.<param>
-routerItems.get('/admin/userid/:userid', auth([
-  'admins',
+routerItems.get(config.BY_USERID, auth([
+  config.ADMIN_ROLE,
 ]), async (req, res) => {
   const user = await User.findById(req.params.userid)
   if (!user) {
@@ -73,8 +75,8 @@ routerItems.get('/admin/userid/:userid', auth([
   res.json(items)
 })
 
-routerItems.get('/admin/username/:username', auth([
-  'admins',
+routerItems.get(config.BY_USERNAME, auth([
+  config.ADMIN_ROLE,
 ]), async (req, res) => {
   const user = await User.findOne({
     username: req.params.username,
@@ -90,7 +92,7 @@ routerItems.get('/admin/username/:username', auth([
   res.json(items)
 })
 
-routerItems.get('/:id', async (req, res) => {
+routerItems.get(config.BY_ID, async (req, res) => {
   const item = await Item.findById(req.params.id)
   if (!item) {
     return res.status(404).end()
@@ -103,8 +105,8 @@ routerItems.get('/:id', async (req, res) => {
   })
 })
 
-routerItems.get('/:id/admin', auth([
-  'admins',
+routerItems.get(config.BY_ID_ADMIN, auth([
+  config.ADMIN_ROLE,
 ]), async (req, res) => {
   const item = await Item.findById(req.params.id)
   if (!item) {
@@ -115,7 +117,7 @@ routerItems.get('/:id/admin', auth([
 })
 
 routerItems.post('/', auth([
-  'admins',
+  config.ADMIN_ROLE,
 ]), async (req, res) => {
   const iteminfo = req.body
 
@@ -127,8 +129,8 @@ routerItems.post('/', auth([
   res.status(201).json(created)
 })
 
-routerItems.delete('/:id', auth([
-  'admins',
+routerItems.delete(config.BY_ID, auth([
+  config.ADMIN_ROLE,
 ]), async (req, res) => {
   const item = await Item.findById(req.params.id)
 
@@ -141,8 +143,8 @@ routerItems.delete('/:id', auth([
   res.status(204).end()
 })
 
-routerItems.put('/:id', auth([
-  'admins',
+routerItems.put(config.BY_ID, auth([
+  config.ADMIN_ROLE,
 ]), async (req, res) => {
   const iteminfo = req.body
   const item = await Item.findById(req.params.id)

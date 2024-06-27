@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const config = require('../utils/config')
+const config = require('../config')
 const User = require('../models/user')
 
 const auth = (roles, model) => {
@@ -19,14 +19,14 @@ const auth = (roles, model) => {
       return
     }
 
-    if (roles.includes('owner')) {
+    if (roles.includes(config.OWNER_ROLE)) {
       const resource = await model.findById(req.params.id)
       if (!resource) {
         return res.status(404).end()
       }
       if (
         user.id !== (model === User ? resource.id : resource.user) &&
-        !user.roles.includes('admins')
+        !user.roles.includes(config.ADMIN_ROLE)
       ) {
         return res.status(401).json({
           error: 'permission invalid',
@@ -38,7 +38,7 @@ const auth = (roles, model) => {
     }
 
     if (
-      !user.roles.includes('admins') &&
+      !user.roles.includes(config.ADMIN_ROLE) &&
       !user.roles.some(e => roles.includes(e))
     ) {
       return res.status(401).json({

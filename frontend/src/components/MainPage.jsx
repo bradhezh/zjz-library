@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 //import {useNavigate} from 'react-router-dom'
 
 import './style.css'
+import config from '../../../config'
 import Header from './Header'
 import UserBar from './UserBar'
 import Footer from './Footer'
@@ -37,7 +38,7 @@ const MainPage = () => {
     }
 
     let all
-    if (!loggedin?.roles.includes('admins')) {
+    if (!loggedin?.roles.includes(config.ADMIN_ROLE)) {
       all = await svcItems.getAll()
     } else {
       all = await svcItems.getAllByAdmin(loggedin)
@@ -105,7 +106,10 @@ const MainPage = () => {
         ...item,
         user: null,
       }, user)
-      setItems(items.map(e => e.id !== item.id ? e : updated))
+      setItems(items.map(e => e.id !== item.id ? e : {
+        ...updated,
+        applicant: '',
+      }))
       return
     }
 
@@ -153,24 +157,24 @@ const MainPage = () => {
       <ul>{
         items.map(e =>
           <li key={e.id} className="item">
-            <div>
-              <span>{e.name}</span>
-              <span>{
-                !user?.roles.includes('admins') ?
+            <div className="itemline">
+              <span>{e.name} </span>
+              <span> {
+                !user?.roles.includes(config.ADMIN_ROLE) ?
                   null :
                   <button onClick={() => deleteItem(e.id)}>Delete</button>
               }</span>
             </div>
             <div>
               <span>{
-                !user?.roles.includes('admins') ? (
+                !user?.roles.includes(config.ADMIN_ROLE) ? (
                   e.available ? 'Available' : 'Occupied') : (
                   !e.user ?
                     'Available' :
                     e.user.name || e.user.username)
-              }</span>
-              <span>{
-                !user?.roles.includes('admins') ?
+              } </span>
+              <span> {
+                !user?.roles.includes(config.ADMIN_ROLE) ?
                   null : (
                   e.user ?
                     null :
@@ -184,9 +188,9 @@ const MainPage = () => {
                         }))
                       }
                     />)
-              }</span>
-              <span>{
-                !user?.roles.includes('admins') ?
+              } </span>
+              <span> {
+                !user?.roles.includes(config.ADMIN_ROLE) ?
                   null :
                   <button onClick={() => assignItem(e)}>{
                     e.user ? 'Release' : 'Assign'
@@ -196,7 +200,7 @@ const MainPage = () => {
           </li>
         )
       }</ul>{
-        !user?.roles.includes('admins') ?
+        !user?.roles.includes(config.ADMIN_ROLE) ?
           null :
           <form onSubmit={addItem}>
             <input

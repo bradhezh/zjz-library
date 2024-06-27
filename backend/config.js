@@ -1,7 +1,12 @@
 require('dotenv').config()
 
+const config = require('../config')
+
 // passed via cli
 const NODE_ENV = process.env.NODE_ENV
+const NODE_ENV_PRD = 'production'
+const NODE_ENV_TST = 'test'
+const NODE_ENV_DEV = 'development'
 
 // configured by dotenv (locally) or in hosts such as Render (automatically) or
 // Fly.io (fly.toml)
@@ -19,23 +24,35 @@ const MONGO_URL =
 
 // the secret for user tokens
 const SECRET = process.env.SECRET
+// saltround for hash password
+const SALT = process.env.SALT
 
-const SALT = 10
-
-const ADMIN_INITIAL_USERNAME = 'admin'
-const ADMIN_INITIAL_PASSWORD = '88888888'
-
-const ADMIN_ROLE = 'admin'
-const USER_ROLE = 'user'
+const ADMIN_INITIAL_USERNAME = process.env.ADMIN_INITIAL_USERNAME
+const ADMIN_INITIAL_PASSWORD = process.env.ADMIN_INITIAL_PASSWORD
 
 module.exports = {
   NODE_ENV,
+  NODE_ENV_PRD,
+  NODE_ENV_TST,
+  NODE_ENV_DEV,
   PORT,
   MONGO_URL,
   SECRET,
   SALT,
   ADMIN_INITIAL_USERNAME,
   ADMIN_INITIAL_PASSWORD,
-  ADMIN_ROLE,
-  USER_ROLE,
+  USERS_ROUTE: config.USERS_ROUTE,
+  LOGIN_ROUTE: config.LOGIN_ROUTE,
+  ITEMS_ROUTE: config.ITEMS_ROUTE,
+  BY_ID: config.BY_ID,
+  BY_NAME: config.BY_NAME,
+  BY_USERID: config.BY_USERID,
+  BY_USERNAME: config.BY_USERNAME,
+  BY_USER: config.BY_USER,
+  BY_ADMIN: config.BY_ADMIN,
+  BY_AVAILABLE: config.BY_AVAILABLE,
+  BY_ID_ADMIN: config.BY_ID_ADMIN,
+  ADMIN_ROLE: config.ADMIN_ROLE,
+  USER_ROLE: config.USER_ROLE,
+  OWNER_ROLE: config.OWNER_ROLE,
 }

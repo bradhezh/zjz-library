@@ -8,7 +8,7 @@ module.exports = {
 
     // TODO Change this to your database name:
     // db name is included in url
-    //databaseName: "YOURDATABASENAME",
+    //databaseName: 'YOURDATABASENAME',
 
     options: {
       useNewUrlParser: true, // removes a deprecation warning when connecting
