@@ -43,7 +43,7 @@ logger.info(
 //  await mongoose.connect(config.MONGO_URL)
 //  logger.info('connected')
 //} catch (err) {
-//  logger.error('error connecting to MongoDB:', err.message)
+//  logger.error('connecting to MongoDB failed:', err.message)
 //}})()
 mongoose.connect(config.MONGO_URL)
   .then(() => {

@@ -4,9 +4,9 @@ const config = require('../config')
 
 // passed via cli
 const NODE_ENV = process.env.NODE_ENV
-const NODE_ENV_PRD = 'production'
+const NODE_ENV_PRD = 'prod'
 const NODE_ENV_TST = 'test'
-const NODE_ENV_DEV = 'development'
+const NODE_ENV_DEV = 'dev'
 
 // configured by dotenv (locally) or in hosts such as Render (automatically) or
 // Fly.io (fly.toml)
