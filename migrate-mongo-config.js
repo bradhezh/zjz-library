@@ -1,5 +1,5 @@
 // In this file you can configure migrate-mongo
-const config = require('./backend/utils/config.js')
+const config = require('./backend/config.js')
 
 module.exports = {
   mongodb: {

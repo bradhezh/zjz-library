@@ -24,6 +24,9 @@ const items = [{
   name: 'Understanding the Linux Kernel, 3rd Edition',
 }]
 
+// it's not necessary to use app's db config, especially from env vars
+const SALT = 10
+
 // start the app (app.listen(portInternal)) and return an api client
 const api = supertest(app)
 
@@ -32,7 +35,7 @@ describe('when there is an initially user in db', () => {
   // before tests in the group
   before(async () => {
     await User.deleteMany({})
-    const password = await bcrypt.hash(user.password, config.SALT)
+    const password = await bcrypt.hash(user.password, SALT)
     await (new User({
       ...user,
       password,
@@ -66,7 +69,7 @@ describe('when there is an initially user in db', () => {
     // "node --test --test-only" (npm test -- --test-only) only executes
     // "test.only"
     //test.only('getting all items succeeds',
-    test('getting all items by "user" succeeds without the user field',
+    test('getting all items by a normal user succeeds without the user field',
     async () => {
       const res = await api
         .get(config.ITEMS_ROUTE)

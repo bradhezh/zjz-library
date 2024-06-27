@@ -23,7 +23,6 @@ jobs:
       - name: Test
         env:
           TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
-          SALT: ${{ secrets.SALT }}
         run: npm test
       - name: Trigger deployment on Render
         if: ${{ github.event_name == 'push' }}
