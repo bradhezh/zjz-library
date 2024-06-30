@@ -31,10 +31,10 @@ const CartPage = () => {
       message: err.response.data?.error || err.message,
     })
     setTimeout(() => setNotif(null), 5000)
-  }})()}, [])
+  }})()}, [navigate])
 
   const deleteItem = async id => {try {
-    const update = items.filter(e => e.id != id)
+    const update = items.filter(e => e.id !== id)
     await svcItems.updateCart(update.map(e => e.id), user)
     setItems(update)
 
@@ -46,7 +46,7 @@ const CartPage = () => {
     setTimeout(() => setNotif(null), 5000)
   }}
 
-  const checkout = async id => {try {
+  const checkout = async () => {try {
     await svcItems.checkout(user)
     navigate('/')
 
@@ -69,7 +69,7 @@ const CartPage = () => {
             <div className="itemline">
               <span>{e.name} | {e.author}</span>
               <span> {
-                  <button onClick={() => deleteItem(e.id)}>Delete</button>
+                <button onClick={() => deleteItem(e.id)}>Delete</button>
               }</span>
             </div>
           </li>

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import {useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 
 import './style.css'
 import config from '../../../config'
@@ -16,6 +16,7 @@ const ItemPage = () => {
   const [content, setContent] = useState('')
 
   const [notif, setNotif] = useState(null)
+  const navigate = useNavigate()
   const {id} = useParams()
 
   useEffect(() => {(async () => {try {
@@ -36,7 +37,7 @@ const ItemPage = () => {
       message: err.response.data?.error || err.message,
     })
     setTimeout(() => setNotif(null), 5000)
-  }})()}, [])
+  }})()}, [id, navigate])
 
   const updateItem = async evt => {try {
     evt.preventDefault()

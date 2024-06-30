@@ -42,7 +42,7 @@ const MainPage = () => {
       message: err.response.data?.error || err.message,
     })
     setTimeout(() => setNotif(null), 5000)
-  }})()}, [])
+  }})()}, [navigate])
 
   const addToCart = async item => {try {
     await svcItems.updateCart(cart.map(e => e.id).concat(item.id), user)

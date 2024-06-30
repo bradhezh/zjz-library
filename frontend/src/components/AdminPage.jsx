@@ -39,7 +39,7 @@ const AdminPage = () => {
       message: err.response.data?.error || err.message,
     })
     setTimeout(() => setNotif(null), 5000)
-  }})()}, [])
+  }})()}, [navigate])
 
   const addItem = async evt => {try {
     evt.preventDefault()
