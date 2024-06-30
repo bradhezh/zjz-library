@@ -3,13 +3,13 @@ const mongoose = require('mongoose')
 const schemaItem = new mongoose.Schema({
   name: {
     type: String,
-    minLength: 6,
+    minLength: 1,
     required: true,
     unique: true,
   },
   author: {
     type: String,
-    minLength: 6,
+    minLength: 1,
   },
   content: String,
 })

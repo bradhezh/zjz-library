@@ -16,7 +16,7 @@ const UserBar = ({user}) => {
   return (
     <div>
       {user && <h2>Welcome, {user.name || user.username}</h2>}
-      <span><Link to="/">Libraray</Link></span>
+      <span><Link to="/">Library</Link></span>
       <span>{
         !user ?
           null : (
