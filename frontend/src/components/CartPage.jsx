@@ -46,9 +46,11 @@ const CartPage = () => {
     setTimeout(() => setNotif(null), 5000)
   }}
 
-  const checkout = async () => {try {
+  const checkout = async (evt) => {try {
+    evt.preventDefault()
+
     await svcItems.checkout(user)
-    navigate('/')
+    navigate('/items')
 
   } catch (err) {
     setNotif({
