@@ -21,6 +21,7 @@ const PasswordPage = () => {
     const loggedin = JSON.parse(localStorage.getItem('loggedin'))
     if (!loggedin) {
       navigate('/login')
+      return
     }
     setUser(loggedin)
     setUsername(loggedin.username)

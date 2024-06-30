@@ -19,6 +19,7 @@ const CartPage = () => {
     const loggedin = JSON.parse(localStorage.getItem('loggedin'))
     if (!loggedin) {
       navigate('/login')
+      return
     }
     setUser(loggedin)
 

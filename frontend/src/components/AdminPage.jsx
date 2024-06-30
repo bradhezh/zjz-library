@@ -23,6 +23,7 @@ const AdminPage = () => {
     const loggedin = JSON.parse(localStorage.getItem('loggedin'))
     if (!loggedin || !loggedin.roles.includes(config.ADMIN_ROLE)) {
       navigate('/login')
+      return
     }
     setUser(loggedin)
 
