@@ -24,15 +24,11 @@ const items = [{
   name: 'Understanding the Linux Kernel, 3rd Edition',
 }]
 
-// it's not necessary to use app's db config, especially from env vars
 const SALT = 10
 
-// start the app (app.listen(portInternal)) and return an api client
 const api = supertest(app)
 
-// a group
 describe('when there is an initially user in db', () => {
-  // before tests in the group
   before(async () => {
     await User.deleteMany({})
     const password = await bcrypt.hash(user.password, SALT)
@@ -42,33 +38,18 @@ describe('when there is an initially user in db', () => {
     })).save()
   })
 
-  // a sub-group
   describe('when there is initially items for the user in db', () => {
     before(async () => {
       await Item.deleteMany({})
       const users = await User.find({})
-      //await Item.insertMany(items)
-      // in order
       for (const e of items) {
         await (new Item({
           ...e,
           user: users[0].id,
         })).save()
       }
-      //// in parallel
-      //const promises = items
-      //  .map(e => new Item({
-      //    ...e,
-      //    user: users[0].id,
-      //  }))
-      //  .map(e => e.save())
-      //await Promise.all(promises)
     })
 
-    // a test case
-    // "node --test --test-only" (npm test -- --test-only) only executes
-    // "test.only"
-    //test.only('getting all items succeeds',
     test('getting all items by a normal user succeeds without the user field',
     async () => {
       const res = await api
@@ -85,7 +66,6 @@ describe('when there is an initially user in db', () => {
   })
 })
 
-// after all tests
 after(async () => {
   await mongoose.connection.close()
 })

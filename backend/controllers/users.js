@@ -38,7 +38,7 @@ routerUsers.get(config.BY_NAME, auth([
 })
 
 routerUsers.post('/', async (req, res) => {
-  await signin(req, res, [
+  await create(req, res, [
     config.USER_ROLE,
   ])
 })
@@ -46,7 +46,7 @@ routerUsers.post('/', async (req, res) => {
 routerUsers.post(config.BY_ADMIN, auth([
   config.ADMIN_ROLE,
 ]), async (req, res) => {
-  await signin(req, res, [
+  await create(req, res, [
     config.ADMIN_ROLE,
   ])
 })
@@ -63,35 +63,41 @@ routerUsers.put('/', auth(), async (req, res) => {
   const user = req.user
   const userinfo = req.body
 
-  delete userinfo.roles
   userinfo.password = await bcrypt.hash(userinfo.password, config.SALT)
+  delete userinfo.roles
+  delete userinfo.items
+  delete userinfo.cart
   Object.assign(user, userinfo)
-  const updated = await user.save()
+  await user.save()
 
-  res.json(updated)
+  res.status(204).end()
 })
 
 routerUsers.put(config.BY_ID, auth([
   config.ADMIN_ROLE,
 ]), async (req, res) => {
   const userinfo = req.body
+
   const user = await User.findById(req.params.id)
   if (!user) {
     return res.status(404).end()
   }
-
   userinfo.password = await bcrypt.hash(userinfo.password, config.SALT)
+  delete userinfo.items
+  delete userinfo.cart
   Object.assign(user, userinfo)
-  const updated = await user.save()
+  await user.save()
 
-  res.json(updated)
+  res.status(204).end()
 })
 
-const signin = async (req, res, roles) => {
+const create = async (req, res, roles) => {
   const userinfo = req.body
 
   userinfo.password = await bcrypt.hash(userinfo.password, config.SALT)
   userinfo.roles = roles
+  delete userinfo.items
+  delete userinfo.cart
   const created = await (new User(userinfo)).save()
 
   res.status(201).json(created)

@@ -9,12 +9,20 @@ const User = require('./backend/models/user')
 // sample items, shouldn't be included for real production deployment
 const items = [{
   name: 'The C Programming Language',
+  author: 'Brian W. Kernighan, Dennis M. Ritchie',
+  content: 'Content of the book',
 }, {
   name: 'Computer Organization and Design',
+  author: 'David A. Patterson, John L. Hennessy',
+  content: 'Content of the book',
 }, {
   name: 'Structure and Interpretation of Computer Programs',
+  author: 'Harold Abelson, Gerald Jay Sussman, Julie Sussman',
+  content: 'Content of the book',
 }, {
   name: 'Understanding the Linux Kernel',
+  author: 'Daniel P. Bovet, Marco Cesati',
+  content: 'Content of the book',
 }]
 
 ;(async () => {try {

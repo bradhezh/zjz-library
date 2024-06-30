@@ -51,8 +51,6 @@ const auth = (roles, model) => {
 }
 
 const getTokenFrom = req => {
-  // token is included in the request as the authorization header with the
-  // scheme: Bearer xxxtokenxxx
   const auth = req.get('authorization')
   if (auth && auth.startsWith('Bearer ')) {
     return auth.replace('Bearer ', '')

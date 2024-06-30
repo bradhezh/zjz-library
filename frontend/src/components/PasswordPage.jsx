@@ -8,11 +8,11 @@ import Notification from './Notification'
 import svcUsers from '../services/users'
 
 const PasswordPage = () => {
+  const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
   const [password1, setPassword1] = useState('')
   const [password2, setPassword2] = useState('')
-  const [user, setUser] = useState(null)
 
   const [notif, setNotif] = useState(null)
   const navigate = useNavigate()
@@ -37,10 +37,10 @@ const PasswordPage = () => {
   const updateUser = async evt => {try {
     evt.preventDefault()
 
-    if (password1 !== password2) {
+    if (!password1 || password1 !== password2) {
       setNotif({
         type: 'info',
-        message: 'The new password and confirmation password do not match',
+        message: 'Enter and confirm the password',
       })
       setTimeout(() => setNotif(null), 5000)
       return
@@ -89,7 +89,7 @@ const PasswordPage = () => {
         <br />
         <input
           type="password"
-          placeholder="Confirm Password"
+          placeholder="Confirm password"
           value={password2}
           onChange={evt => setPassword2(evt.target.value)}
         />

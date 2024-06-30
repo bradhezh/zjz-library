@@ -10,7 +10,8 @@ import svcUsers from '../services/users'
 const SigninPage = () => {
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
+  const [password1, setPassword1] = useState('')
+  const [password2, setPassword2] = useState('')
 
   const [notif, setNotif] = useState(null)
   const navigate = useNavigate()
@@ -18,10 +19,19 @@ const SigninPage = () => {
   const signin = async evt => {try {
     evt.preventDefault()
 
+    if (!password1 || password1 !== password2) {
+      setNotif({
+        type: 'info',
+        message: 'Enter and confirm the password',
+      })
+      setTimeout(() => setNotif(null), 5000)
+      return
+    }
+
     await svcUsers.signin({
       username,
       name,
-      password,
+      password: password1,
     })
 
     navigate('/login')
@@ -55,8 +65,14 @@ const SigninPage = () => {
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={evt => setPassword(evt.target.value)}
+          value={password1}
+          onChange={evt => setPassword1(evt.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Confirm password"
+          value={password2}
+          onChange={evt => setPassword2(evt.target.value)}
         />
         <br />
         <br />

@@ -5,7 +5,7 @@ const Footer = () => {
     <div className="footer">
       <br />
       <em>
-        React + Express app template, based on the fullstack open course of University of Helsinki 2024
+        Jingzhou Zhang, AIS
       </em>
     </div>
   )

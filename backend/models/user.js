@@ -5,9 +5,6 @@ const schemaUser = new mongoose.Schema({
     type: String,
     minLength: 4,
     required: true,
-    // achieving uniqueness via unique index created for this field; note that
-    // if there're already documents with the same field value, mongoose can't
-    // create its unique index and can't ensure its uniqueness
     unique: true,
   },
   name: String,
@@ -20,6 +17,14 @@ const schemaUser = new mongoose.Schema({
     type: String,
     required: true,
   }],
+  items: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Item',
+  }],
+  cart: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Item',
+  }],
 })
 schemaUser.set('toJSON', {
   transform: (document, returned) => {
@@ -27,6 +32,8 @@ schemaUser.set('toJSON', {
     delete returned._id
     delete returned.__v
     delete returned.password
+    delete returned.items
+    delete returned.cart
   },
 })
 

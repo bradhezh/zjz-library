@@ -2,18 +2,15 @@ import {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 
 import './style.css'
-import config from '../../../config'
 import Header from './Header'
 import UserBar from './UserBar'
 import Footer from './Footer'
 import Notification from './Notification'
 import svcItems from '../services/items'
 
-const MainPage = () => {
+const CartPage = () => {
   const [user, setUser] = useState(null)
   const [items, setItems] = useState([])
-  const [itemsOfUser, setItemsOfUser] = useState([])
-  const [cart, setCart] = useState([])
 
   const [notif, setNotif] = useState(null)
   const navigate = useNavigate()
@@ -23,17 +20,9 @@ const MainPage = () => {
     if (!loggedin) {
       navigate('/login')
     }
-    if (loggedin.roles.includes(config.ADMIN_ROLE)) {
-      navigate('/admin')
-    }
     setUser(loggedin)
 
-    let data = await svcItems.getByUser(loggedin)
-    setItemsOfUser(data)
-    data = await svcItems.getByCart(loggedin)
-    setCart(data)
-
-    data = await svcItems.get()
+    const data = await svcItems.getByCart(loggedin)
     setItems(data)
 
   } catch (err) {
@@ -44,9 +33,22 @@ const MainPage = () => {
     setTimeout(() => setNotif(null), 5000)
   }})()}, [])
 
-  const addToCart = async item => {try {
-    await svcItems.updateCart(cart.map(e => e.id).concat(item.id), user)
-    setCart(cart.concat(item))
+  const deleteItem = async id => {try {
+    const update = items.filter(e => e.id != id)
+    await svcItems.updateCart(update.map(e => e.id), user)
+    setItems(update)
+
+  } catch (err) {
+    setNotif({
+      type: 'error',
+      message: err.response.data?.error || err.message,
+    })
+    setTimeout(() => setNotif(null), 5000)
+  }}
+
+  const checkout = async id => {try {
+    await svcItems.checkout(user)
+    navigate('/')
 
   } catch (err) {
     setNotif({
@@ -67,22 +69,18 @@ const MainPage = () => {
             <div className="itemline">
               <span>{e.name} | {e.author}</span>
               <span> {
-                !user ?
-                  null : (
-                  itemsOfUser.map(i => i.id).includes(e.id) ||
-                  cart.map(i => i.id).includes(e.id) ?
-                    null :
-                    <button onClick={() => addToCart(e)}>
-                      Add to cart
-                    </button>)
+                  <button onClick={() => deleteItem(e.id)}>Delete</button>
               }</span>
             </div>
           </li>
         )
       }</ul>
+      <form onSubmit={checkout}>
+        <button type="submit">Check out</button>
+      </form>
       <Footer />
     </div>
   )
 }
 
-export default MainPage
+export default CartPage

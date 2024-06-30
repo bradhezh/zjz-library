@@ -1,4 +1,3 @@
-// create a router
 const routerItems = require('express').Router()
 
 const config = require('../config')
@@ -8,91 +7,29 @@ const Item = require('../models/item')
 
 routerItems.get('/', async (req, res) => {
   const items = await Item.find({})
-  const transformed = items.map(e => {
-    // toJSON() here only transforms the object as being defined in
-    // schemaItem.set('toJSON', {transform: ...})
-    const item = e.toJSON()
-    item.available = !e.user
-    delete item.user
-    return item
-  })
-
-  res.json(transformed)
-})
-
-routerItems.get(config.BY_AVAILABLE, async (req, res) => {
-  const items = await Item.find({
-    user: {
-      $exists: false,
-    },
-  })
 
   res.json(items)
 })
 
-routerItems.get(config.BY_USER, auth(), async (req, res) => {
+routerItems.get(config.BY_OCCUPIED, async (req, res) => {
+  const users = await User.find({})
+  const cart = users.map(e => e.cart).flat()
+  const items = cart.concat(users.map(e => e.items).flat())
+
+  res.json(items)
+})
+
+routerItems.get(config.BY_ID, auth(), async (req, res) => {
   const user = req.user
 
-  const items = await Item.find({
-    // id is provided by mongoose, although there's only _id in Mongo documents
-    user: user.id,
-  })
-
-  res.json(items)
-})
-
-routerItems.get(config.BY_ADMIN, auth([
-  config.ADMIN_ROLE,
-]), async (req, res) => {
-  // populate(...) replaces the "user" filed of the items with the users being
-  // referenced; the reference relationship is recorded in the "Item" schema, so
-  // mongoose know it's a user id and then can populate it
-  const items = await Item.find({}).populate('user', {
-    // fields of "user" selected
-    username: 1,
-    name: 1,
-  })
-
-  res.json(items)
-})
-
-// ":<param>" in the route defines a parameter to match a variable argument in
-// the request path; this parameter (with the value passed from the argument)
-// can be accessed via request.params.<param>
-routerItems.get(config.BY_USERID, auth([
-  config.ADMIN_ROLE,
-]), async (req, res) => {
-  const user = await User.findById(req.params.userid)
-  if (!user) {
-    // 404: Not Found
-    return res.status(404).end()
+  if (
+    !user.roles.includes(config.ADMIN_ROLE) &&
+    !user.items?.includes(req.params.id)
+  ) {
+    return res.status(401).json({
+      error: 'the resource has not been checked out by this user',
+    })
   }
-
-  const items = await Item.find({
-    user: user.id,
-  })
-
-  res.json(items)
-})
-
-routerItems.get(config.BY_USERNAME, auth([
-  config.ADMIN_ROLE,
-]), async (req, res) => {
-  const user = await User.findOne({
-    username: req.params.username,
-  })
-  if (!user) {
-    return res.status(404).end()
-  }
-
-  const items = await Item.find({
-    user: user.id,
-  })
-
-  res.json(items)
-})
-
-routerItems.get(config.BY_ID, async (req, res) => {
   const item = await Item.findById(req.params.id)
   if (!item) {
     return res.status(404).end()
@@ -100,32 +37,71 @@ routerItems.get(config.BY_ID, async (req, res) => {
 
   res.json({
     ...item.toJSON(),
-    available: !item.user,
-    user: null,
+    content: item.content,
   })
 })
 
-routerItems.get(config.BY_ID_ADMIN, auth([
-  config.ADMIN_ROLE,
-]), async (req, res) => {
-  const item = await Item.findById(req.params.id)
-  if (!item) {
-    return res.status(404).end()
-  }
+routerItems.get(config.BY_ID_OCCUPIED, async (req, res) => {
+  const user = await User.findOne({
+    $or: [{
+      items: {
+        $elemMatch: {
+          $eq: req.params.id,
+        },
+      },
+    }, {
+      cart: {
+        $elemMatch: {
+          $eq: req.params.id,
+        },
+      },
+    }]
+  })
 
-  res.json(item)
+  return res.status(200).json(user ? true : false)
 })
 
-routerItems.post('/', auth([
+routerItems.get(config.BY_USER, auth(), async (req, res) => {
+  const user = req.user
+
+  const items = []
+  for (const e of user.items) {
+    const item = await Item.findById(e)
+    items.push(item)
+  }
+
+  res.json(items)
+})
+
+routerItems.get(config.BY_CART, auth(), async (req, res) => {
+  const user = req.user
+
+  const cart = []
+  for (const e of user.cart) {
+    const item = await Item.findById(e)
+    cart.push(item)
+  }
+
+  res.json(cart)
+})
+
+routerItems.post('/', auth(), async (req, res) => {
+  const user = req.user
+
+  user.items = (!user.items ? [] : user.items).concat(user.cart)
+  user.cart = []
+  await user.save()
+
+  res.status(204).end()
+})
+
+routerItems.post(config.BY_ADMIN, auth([
   config.ADMIN_ROLE,
 ]), async (req, res) => {
   const iteminfo = req.body
 
-  // insert: create an object of the model then save it as a document of the
-  // collection; validators run by default
   const created = await (new Item(iteminfo)).save()
 
-  // 201: Created
   res.status(201).json(created)
 })
 
@@ -133,13 +109,33 @@ routerItems.delete(config.BY_ID, auth([
   config.ADMIN_ROLE,
 ]), async (req, res) => {
   const item = await Item.findById(req.params.id)
-
-  if (item) {
-    // delete
-    await item.deleteOne()
+  if (!item) {
+    return res.status(404).end()
   }
 
-  // 204: No Content
+  const user = await User.findOne({
+    $or: [{
+      items: {
+        $elemMatch: {
+          $eq: req.params.id,
+        },
+      },
+    }, {
+      cart: {
+        $elemMatch: {
+          $eq: req.params.id,
+        },
+      },
+    }]
+  })
+  if (user) {
+    return res.status(400).json({
+      error: 'the resource has been occupied by users',
+    })
+  }
+
+  await item.deleteOne()
+
   res.status(204).end()
 })
 
@@ -147,12 +143,31 @@ routerItems.put(config.BY_ID, auth([
   config.ADMIN_ROLE,
 ]), async (req, res) => {
   const iteminfo = req.body
+
   const item = await Item.findById(req.params.id)
-
+  if (!item) {
+    return res.status(404).end()
+  }
   Object.assign(item, iteminfo)
-  const updated = await item.save()
+  await item.save()
 
-  res.json(updated)
+  res.status(204).end()
+})
+
+routerItems.put('/', auth(), async (req, res) => {
+  const user = req.user
+  const ids = req.body
+
+  for (const e of ids) {
+    const item = await Item.findById(e)
+    if (!item) {
+      return res.status(404).end()
+    }
+  }
+  user.cart = ids
+  await user.save()
+
+  res.status(204).end()
 })
 
 module.exports = routerItems
