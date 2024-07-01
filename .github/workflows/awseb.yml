@@ -33,10 +33,5 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: "ap-southeast-2"
-          EB_APP_NAME: "zjz-library"
-          EB_ENV_NAME: "zjz-library-env"
-        run: |
-          eb init -p node.js $EB_APP_NAME --region $AWS_REGION
-          eb use $EB_ENV_NAME
-          eb deploy
+        # create the app and env locally at first
+        run: eb deploy

@@ -6,7 +6,7 @@ global:
   application_name: zjz-library
   branch: null
   default_ec2_keyname: null
-  default_platform: Node.js 20 running on 64bit Amazon Linux 2023
+  default_platform: Node.js 18
   default_region: ap-southeast-2
   include_git_submodules: true
   instance_profile: null
