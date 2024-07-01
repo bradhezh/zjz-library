@@ -1,4 +1,4 @@
-name: Fly pipeline
+name: AWS EB pipeline
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   full:
-    name: Full pipeline on Fly
+    name: Full pipeline on AWS EB
     runs-on: ubuntu-20.04
     concurrency: deploy-group
     steps:
@@ -18,7 +18,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: npm install
       - run: npm run lint
       - run: npm run build
