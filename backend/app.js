@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/version', (req, res) => {
-  res.send('0')
+  res.send('1')
 })
 
 app.use(config.USERS_ROUTE, routerUsers)
