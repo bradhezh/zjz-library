@@ -1,3 +1,5 @@
+const path = require('path')
+
 const logger = require('./logger')
 
 const loggerReq = (req, res, next) => {
@@ -10,10 +12,11 @@ const loggerReq = (req, res, next) => {
 }
 
 const endpointUnknown = (req, res) => {
-  res.status(404).json({
-    error: 'unknown endpoint',
-  })
+//  res.status(404).json({
+//    error: 'unknown endpoint',
+//  })
 
+  res.sendFile(path.join(process.cwd(), 'dist/index.html'))
 }
 
 const handlerErr = (err, req, res, next) => {

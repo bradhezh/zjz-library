@@ -46,12 +46,12 @@ jobs:
           name: found github actions config
           command: ':'
 workflows:
-  build-and-test:
-    jobs:
-      - test-node
-      - build-node:
-          requires:
-            - test-node
+  #build-and-test:
+  #  jobs:
+  #    - test-node
+  #    - build-node:
+  #        requires:
+  #          - test-node
     # - deploy:
     #     requires:
     #       - build-node
